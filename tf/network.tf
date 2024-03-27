@@ -11,25 +11,25 @@ resource "aws_vpc" "vpc_devglobo" {
 
 #Subnets públicas
 
-resource "aws_subnet" "deveqi-public-a" {
-  vpc_id            = aws_vpc.vpc_deveqi.id
+resource "aws_subnet" "devglobo-public-a" {
+  vpc_id            = aws_vpc.vpc_devglobo.id
   cidr_block        = "10.0.1.0/24"
   availability_zone = "sa-east-1a"
 
   tags = {
-    Name = "deveqi-public-a"
+    Name = "devglobo-public-a"
   }
 }
 
 
 
-resource "aws_subnet" "deveqi-public-b" {
-  vpc_id            = aws_vpc.vpc_deveqi.id
+resource "aws_subnet" "devglobo-public-b" {
+  vpc_id            = aws_vpc.vpc_devglobo.id
   cidr_block        = "10.0.2.0/24"
   availability_zone = "sa-east-1b"
 
   tags = {
-    Name = "deveqi-public-b"
+    Name = "devglobo-public-b"
   }
 }
 
@@ -37,25 +37,25 @@ resource "aws_subnet" "deveqi-public-b" {
 
 #Subnets privadas
 
-resource "aws_subnet" "deveqi-private-a" {
-  vpc_id            = aws_vpc.vpc_deveqi.id
+resource "aws_subnet" "devglobo-private-a" {
+  vpc_id            = aws_vpc.vpc_devglobo.id
   cidr_block        = "10.0.3.0/24"
   availability_zone = "sa-east-1a"
 
   tags = {
-    Name = "deveqi-private-a"
+    Name = "devglobo-private-a"
   }
 }
 
 
 
-resource "aws_subnet" "deveqi-private-b" {
-  vpc_id            = aws_vpc.vpc_deveqi.id
+resource "aws_subnet" "devglobo-private-b" {
+  vpc_id            = aws_vpc.vpc_devglobo.id
   cidr_block        = "10.0.4.0/24"
   availability_zone = "sa-east-1b"
 
   tags = {
-    Name = "deveqi-private-b"
+    Name = "devglobo-private-b"
   }
 }
 
@@ -63,65 +63,65 @@ resource "aws_subnet" "deveqi-private-b" {
 
 #Internet Gateway
 
-resource "aws_internet_gateway" "ig-deveqi" {
-  vpc_id = aws_vpc.vpc_deveqi.id
+resource "aws_internet_gateway" "ig-devglobo" {
+  vpc_id = aws_vpc.vpc_devglobo.id
 
   tags = {
-    Name = "ig_deveqi"
+    Name = "ig_devglobo"
   }
 }
 
 
 # Associação do Internet Gateway à tabela de roteamento pública
 
-resource "aws_route_table" "deveqi-rtpublic" {
-  vpc_id = aws_vpc.vpc_deveqi.id
+resource "aws_route_table" "devglobo-rtpublic" {
+  vpc_id = aws_vpc.vpc_devglobo.id
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.ig-deveqi.id
+    gateway_id = aws_internet_gateway.ig-devglobo.id
   }
 
   tags = {
-    Name = "deveqi-public-route"
+    Name = "devglobo-public-route"
   }
 }
 
 
 #Associações de tabelas de roteamento para subnets públicas
 
-resource "aws_route_table_association" "rta-deveqi-public-a" {
-  subnet_id      = aws_subnet.deveqi-public-a.id
-  route_table_id = aws_route_table.deveqi-rtpublic.id
+resource "aws_route_table_association" "rta-devglobo-public-a" {
+  subnet_id      = aws_subnet.devglobo-public-a.id
+  route_table_id = aws_route_table.devglobo-rtpublic.id
 }
 
-resource "aws_route_table_association" "rta-deveqi-public-b" {
-  subnet_id      = aws_subnet.deveqi-public-b.id
-  route_table_id = aws_route_table.deveqi-rtpublic.id
+resource "aws_route_table_association" "rta-devglobo-public-b" {
+  subnet_id      = aws_subnet.devglobo-public-b.id
+  route_table_id = aws_route_table.devglobo-rtpublic.id
 }
 
 
 
 #Tabelas de roteamento privadas
 
-resource "aws_route_table" "deveqi-rtprivate" {
-  vpc_id = aws_vpc.vpc_deveqi.id
+resource "aws_route_table" "devglobo-rtprivate" {
+  vpc_id = aws_vpc.vpc_devglobo.id
   tags = {
-    Name = "deveqi-rtprivate"
+    Name = "devglobo-rtprivate"
   }
 }
 
 
 #Associações de tabelas de roteamento para subnets 
 
-resource "aws_route_table_association" "rta-deveqi-private-a" {
-  subnet_id      = aws_subnet.deveqi-private-a.id
-  route_table_id = aws_route_table.deveqi-rtprivate.id
+resource "aws_route_table_association" "rta-devglobo-private-a" {
+  subnet_id      = aws_subnet.devglobo-private-a.id
+  route_table_id = aws_route_table.devglobo-rtprivate.id
 }
 
-resource "aws_route_table_association" "rta-deveqi-private-b" {
-  subnet_id      = aws_subnet.deveqi-private-b.id
-  route_table_id = aws_route_table.deveqi-rtprivate.id
+resource "aws_route_table_association" "rta-devglobo-private-b" {
+  subnet_id      = aws_subnet.devglobo-private-b.id
+  route_table_id = aws_route_table.devglobo-rtprivate.id
 }
 
 
@@ -129,10 +129,10 @@ resource "aws_route_table_association" "rta-deveqi-private-b" {
 
 #Security Group API 
 
-resource "aws_security_group" "sg-deveqi" {
-  name        = "sg_deveqi_api"
+resource "aws_security_group" "sg-devglobo" {
+  name        = "sg_devglobo_app"
   description = "Security group that allows ssh/https and all egress traffic"
-  vpc_id      = aws_vpc.vpc_deveqi.id
+  vpc_id      = aws_vpc.vpc_devglobo.id
 
   ingress {
     from_port   = 80
@@ -154,12 +154,12 @@ resource "aws_security_group" "sg-deveqi" {
     from_port   = 27017
     to_port     = 27017
     protocol    = "tcp"
-    cidr_blocks = [aws_subnet.deveqi-private-a.cidr_block]
+    cidr_blocks = [aws_subnet.devglobo-private-a.cidr_block]
 
   }
 
   tags = {
-    Name = "sg-deveqi-api"
+    Name = "sg-devglobo-app"
   }
 }
 
